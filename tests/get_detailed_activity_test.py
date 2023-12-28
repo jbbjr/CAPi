@@ -21,4 +21,3 @@ client.test_get_detailed_activity(activity_id=9490587429)
 # Should return a detailed activity JSON of the respective activity_id
 activity = client.get_detailed_activity(activity_id=9490587429)
 print(activity)
-
