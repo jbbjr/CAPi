@@ -71,6 +71,20 @@ class Client:
         result = requests.get(url, headers=header, params=param).json()
         return result[0]['id']
 
+    # edits the current description to include the CAPi predictions
+    def update_description(self, activity_id=int, desc=str, pace=str):
+        url = f'{self.base_url}/activities/{activity_id}'
+        header = {'Authorization': 'Bearer ' + self.access_token}
+        param = {'id': activity_id, '<Parameter Name>': 'description'}
+
+        if desc:
+            payload = {'description': f'Climate Adjusted Pace (CAPi): ~{pace} \n\n{desc}'}
+        else:
+            payload = {'description': f'Climate Adjusted Pace (CAPi): ~{pace}'}
+
+        requests.put(url, headers=header, params=param, data=payload)
+
+
     # requests detailed activity information from the strava API
     # takes an activity_id (from a respective workout)
     def get_detailed_activity(self, activity_id=int):
