@@ -1,4 +1,4 @@
-![https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/CAPI_x_Strava_Bold_white_x.png]()
+![https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/strava-logo.png](image)
 
 # CAPi (Climate Adjusted Pace individualized)
 leveraging personal research to create a climate based Grade Adjusted Pace (GAP). Integrates with Strava
