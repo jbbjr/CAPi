@@ -32,6 +32,10 @@ You will need to gather your client id, client secret, and preferred scope, and 
 
 `https://www.strava.com/oauth/authorize?client_id=your_client_id&redirect_uri=http://localhost&response_type=code&scope=activity:read_all,activity:write`
 
+<p align="center">
+  <img src="https://github.com/jbblancojr/CAPi/blob/main/images/scope.png" width="500" />
+</p>
+
 Next with the code you collected, you'll send a POST request with this link, which will return you a new set of client id, client secret, and refresh token.
 
 `https://www.strava.com/oauth/token?client_id=your_client_id&client_secret=your_client_secret&code=your_code_from_previous_step&grant_type=authorization_code`
