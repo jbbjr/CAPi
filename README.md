@@ -50,7 +50,7 @@ When you post a run (or any other workout) to Strava, that is recorded as an act
 
 Inside of the Detailed Activity object, there is a neat element called `Laps`. This contains more granular data for your run. Instead of getting overall distance or time, you can get it per lap by accessing that element. For this reason, we want to get a DetailedActivity for each of our recorded activities, so that we can train our data on samples of laps, which will result in higher accuracy and more data to train on. Furthermore, the aggregate stats for a workout might be skew
 
-**Here's an example.**  
+**Here's an example**  
 
 This is one of my threshold workouts from the fall. You can see that even though the run is 8.5 miles, there are more than 8.5 laps. The darker bars represent my threshold sets (which were in minutes, not miles), and the tiny gaps in between are actually walk breaks. There's a large variance in paces too. This is why it's important to sample by lap.
 
@@ -75,6 +75,41 @@ Since a few specfic requests need to be made pretty frequently, it makes the mos
 - Get weather for the activity data
 
 ## Model Selection & Results
+
+### Predicting Moving Time
+Before we can build CAPi, we need to train a model that can predict how long a lap is going to take given a specific set of features. From the lap and weather data we compiled and after data cleaning, we have about 4100 observations. `eda-and-model-selection.ipynb` goes into more detail on the specific steps. It also includes the preprocessing pipeline and model seleciton, tuning, and evaluation. 
+
+**Here's what our dataset looks like**
+
+**Target Vector**
+| Variable     | Description                              |
+| ------------ | ---------------------------------------- |
+| moving_time  | The lap's moving time, in seconds (int)  |
+
+**Feature Matrix**
+| Variable                | Description                                                                                                            |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| distance                | The lap's distance, in meters (float                                                                                   |
+| average_speed           | The lap's average speed (float)                                                                                        |
+| average_heartrate       | The lap's average heartrate (float)                                                                                    |
+| average_cadence         | The lap's average cadence (float)                                                                                      |
+| max_speed               | The maximum speed of this lap, in meters per second (float)                                                            |
+| max_heartrate           | The maximum heartrate of this lap (float)                                                                              |
+| total_elevation_gain    | The elevation gain of this lap, in meters (float)                                                                      |
+| pace_zone               | The athlete's pace zone during this lap (int)                                                                          |
+| temp                    | Temperature at the location in Fahrenheit (float)                                                                      |
+| dew                     | Dew point temperature (float)                                                                                          |
+| humidity                | Relative humidity in % (float)                                                                                         |
+| windspeed               | The sustained wind speed measured as the average windspeed that occurs during the preceding one to two minutes (float) |
+| winddir                 | Direction from which the wind is blowing (float)                                                                       |
+| sealevelpressure        | The atmospheric pressure at a location that removes reduction in pressure due to the altitude of the location (float)  |
+| cloudcover              | How much of the sky is covered in cloud ranging from 0-100% (float)                                                    |
+| distance_covered_prior  | The cumulative sum of distance covered prior to the current lap (float)                                                |
+| time_elapsed_prior      | The cumulative sum of moving time elapsed prior to the current lap (float)                                             |
+| conditions              | Textual representation of the weather conditions (string)                                                              |
+
+
+
 ## CAPi and CAPi Equation
 ## Use Case on Run
 ## Limitations and Next Steps
