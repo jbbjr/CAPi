@@ -50,7 +50,9 @@ When you post a run (or any other workout) to Strava, that is recorded as an act
 
 Inside of the Detailed Activity object, there is a neat element called `Laps`. This contains more granular data for your run. Instead of getting overall distance or time, you can get it per lap by accessing that element. For this reason, we want to get a DetailedActivity for each of our recorded activities, so that we can train our data on samples of laps, which will result in higher accuracy and more data to train on. Furthermore, the aggregate stats for a workout might be skew
 
-Here's an example. This is one of my threshold workouts from the fall. You can see that even though the run is 8.5 miles, there are more than 8.5 laps. The darker bars represent my threshold sets (which were in minutes, not miles), and the tiny gaps in between are actually walk breaks. There's a large variance in paces too. This is why it's important to sample by lap.
+**Here's an example.**  
+
+This is one of my threshold workouts from the fall. You can see that even though the run is 8.5 miles, there are more than 8.5 laps. The darker bars represent my threshold sets (which were in minutes, not miles), and the tiny gaps in between are actually walk breaks. There's a large variance in paces too. This is why it's important to sample by lap.
 
 ![image](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/laps_example.png)
 
