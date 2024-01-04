@@ -170,7 +170,19 @@ xgbr_pipeline = Pipeline(steps=[
 <br/>
 
 ### First Tune and Evaluations
-For context, I tried about every single model in Scikit learn and found Random Forest and XGBoost to be the top two performance by quite a fair amount. For this reason, I'll only discussing the results from those two models. For the sake of compute I am using RandomizedSearch. Also, it actually seems to be performing pretty well. The metrics of interest are RMSE and MAPE. RMSE is really helpful because it will tell us how many seconds the model is off by on average. MAPE is 
+For context, I tried about every single model in Scikit learn and found Random Forest and XGBoost to be the top two performance by quite a fair amount. For this reason, I'll only discussing the results from those two models. For the sake of compute I am using RandomizedSearch. Also, it actually seems to be performing pretty well. The metrics of interest are RMSE and MAPE. RMSE is really helpful because it will tell us how many seconds the model is off by on average. MAPE is nice as a double check, since its a percentage from the mean and not in units.
+
+<br/>
+
+After Running RandomizedSearch the first time, both the Random Forest and XGBoost models had almost a perfect $R^2$ of 99%. Given the limited size of the data, I was pretty certain this was just overfitting, but the results argue otherwise.
+
+**Results**
+
+Random Forest:&nbsp;&nbsp; RMSE = 7.97&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 5.6%
+
+XGBoost:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMSE = 3.86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 2.7%
+
+Though these results were pretty good, I wanted to think of more ways I could reduce the error, since predictions need to be near perfect to derive any value (because temperature is only a small factor of what affects your run). 
 
 ### Re-evaluation with newly adjusted dataset
 
