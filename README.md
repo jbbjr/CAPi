@@ -176,11 +176,13 @@ For context, I tried about every single model in Scikit learn and found Random F
 
 After Running RandomizedSearch the first time, both the Random Forest and XGBoost models had almost a perfect $R^2$ of 99%. Given the limited size of the data, I was pretty certain this was just overfitting, but the results argue otherwise.
 
-**Results**
+<br/>
 
-Random Forest:&nbsp;&nbsp; RMSE = 7.97&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 5.6%
+**Random Forest Results:&nbsp;&nbsp; RMSE = 7.97&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 5.6%**
 
-XGBoost:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMSE = 3.86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 2.7%
+**XGBoost Results:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMSE = 3.86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 2.7%**
+
+<br/>
 
 Though these results were pretty good, I wanted to think of more ways I could reduce the error, since predictions need to be near perfect to derive any value (because temperature is only a small factor of what affects your run). 
 
@@ -197,7 +199,17 @@ You can see the recovery sets inbetween the darker bars. Those are what we want 
 
 ![outliers](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/example%20of%20outliers.png)
 
-Once I removed all instances
+Once I removed all instances the dataset was around 3200 observations, which is still plenty. Here are the new results.
+
+<br/>
+
+**Random Forest Results:&nbsp;&nbsp; RMSE = 4.48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 1.7%**
+
+**XGBoost Results:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMSE = 2.64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAPE = 1.0%**
+
+<br/>
+
+The hypothesis on the recovery and the spillover laps seems to hold true, as the error decreased by a reasonable amount. I did try to utilize Random Forest for feature seleciton, and the error didn't really change that much (slight increase). I felt that keeping the variables made the most sense because the compute is basically the same. I ended up going with the XGBoost and storing it in `CAPi.pkl` so that we can call on it for predictions in the app script.
 
 ## CAPi and CAPi Equation
 ## Use Case on Run
