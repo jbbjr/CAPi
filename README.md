@@ -52,7 +52,7 @@ Inside of the Detailed Activity object, there is a neat element called `Laps`. T
 
 **Here's an example**  
 
-This is one of my threshold workouts from the fall. You can see that even though the run is 8.5 miles, there are more than 8.5 laps. The darker bars represent my threshold sets (which were in minutes, not miles), and the tiny gaps in between are actually walk breaks. There's a large variance in paces too. This is why it's important to sample by lap.
+This is one of my threshold workouts from the fall. You can see that even though the run is 8.5 miles, there are more than 8.5 laps. The darker bars represent my threshold sets (which were in minutes, not miles), and the tiny gaps in between are actually recoveries within sets. There's a large variance in paces too. This is why it's important to sample by lap.
 
 ![image](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/laps_example.png)
 
