@@ -113,7 +113,7 @@ Before we can build CAPi, we need to train a model that can predict how long a l
 <br/>
 
 ### Pipeline
-```python 
+```python
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.impute import SimpleImputer
@@ -169,9 +169,10 @@ xgbr_pipeline = Pipeline(steps=[
 
 <br/>
 
-#### First Tune and Evaluations
-For context, I tried about every single model in Scikit learn and found Random Forest and XGBoost to be the top two performance by quite a fair amount. For this reason, I'll only discussing the results from those two models.
+### First Tune and Evaluations
+For context, I tried about every single model in Scikit learn and found Random Forest and XGBoost to be the top two performance by quite a fair amount. For this reason, I'll only discussing the results from those two models. For the sake of compute I am using RandomizedSearch. Also, it actually seems to be performing pretty well. The metrics of interest are RMSE and MAPE. RMSE is really helpful because it will tell us how many seconds the model is off by on average. MAPE is 
 
+### Re-evaluation with newly adjusted dataset
 
 ## CAPi and CAPi Equation
 ## Use Case on Run
