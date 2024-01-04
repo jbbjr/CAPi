@@ -54,7 +54,7 @@ Here's an example. This is one of my threshold workouts from the fall. You can s
 
 ![image](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/laps_example.png)
 
-There is a catch to collecting this data though. You can only access one DetailedAcitivity per API call by sending a GET for the corresponding activity id, where as you can collect multiple SummaryActivity objects in one call. This means that we need to first collect all the activity ids, and then request a DetailedActivity one by one, so we can access the Laps element for each of them. This is done inside of `compile_user_laps.py`, which takes care of transforming the data into a usable format and considering rate limiting.
+There is a catch to collecting this data though. You can only access one DetailedAcitivity per API call by sending a GET for the corresponding activity id, where as you can collect multiple SummaryActivity objects in one call. This means that we need to first collect all the activity ids, and then request a DetailedActivity one by one, so we can access the Laps object for each of them. This is done inside of `compile_user_laps.py`, which takes care of transforming the data into a usable format and considering rate limiting.
 
 Once the data is compiled, we use `add_weather.py` to get the necesarry weather data for each lap. What's really cool is that there is a start datetime for each lap, so the weather data can get super granular as well. Inside `add_weather.py` we factor that into a query request to the **VisualCrossing API** (I used this in my research, its super easy to work with, has good data, and I was already familiar with it). Once all that is complete we can move on to the EDA and modeling.
 
@@ -69,7 +69,7 @@ Since a few specfic requests need to be made pretty frequently, it makes the mos
 - Get the most recent activity id (useful for main later)
 - Update the description of an activity (also useful for main later)
 - Get a detailed activity
-- Build activity laps (transforms a lap element from a detailed activity into tabular form)
+- Build activity laps (transforms a lap object from a detailed activity into tabular form)
 - Get weather for the activity data
 
 ## Model Selection & Results
