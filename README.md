@@ -79,7 +79,9 @@ Since a few specfic requests need to be made pretty frequently, it makes the mos
 ### Predicting Moving Time
 Before we can build CAPi, we need to train a model that can predict how long a lap is going to take given a specific set of features. From the lap and weather data we compiled and after data cleaning, we have about 4100 observations. `eda-and-model-selection.ipynb` goes into more detail on the specific steps. It also includes the preprocessing pipeline and model seleciton, tuning, and evaluation. 
 
-**Here's what our dataset looks like**
+### Dataset
+
+<br/>
 
 **Target Vector**
 | Variable     | Description                              |
@@ -108,6 +110,67 @@ Before we can build CAPi, we need to train a model that can predict how long a l
 | time_elapsed_prior      | The cumulative sum of moving time elapsed prior to the current lap (float)                                             |
 | conditions              | Textual representation of the weather conditions (string)                                                              |
 
+<br/>
+
+### Pipeline
+```python 
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
+from sklearn.impute import SimpleImputer
+
+nums = ['distance', 'average_speed', 'average_heartrate', 'average_cadence', 'max_speed', 
+        'max_heartrate', 'total_elevation_gain', 'temp', 'dew', 'humidity', 'windspeed', 
+        'winddir', 'sealevelpressure', 'cloudcover', 'distance_covered_prior', 'time_elapsed_prior']
+
+cats =  ['pace_zone']
+dummies = ['conditions']
+
+num_pipe = Pipeline(steps=[
+    ('impute', SimpleImputer(strategy='mean')),        # just for reproducibility purposes
+    ('scale', StandardScaler())
+])
+
+# pace zone is actually ordinal with some sort of scale (we need to account for that)
+cat_pipe = Pipeline(steps=[
+    ('impute', SimpleImputer(strategy='most_frequent')),
+    ('categorize', OrdinalEncoder()),
+])
+
+# we can't say much about how conditions are sequentially better than others in an ordinal sense.
+dummy_pipe = Pipeline(steps=[
+    ('impute', SimpleImputer(strategy='most_frequent')),       # just for reproducibility purposes
+    ('categorize', OneHotEncoder(handle_unknown='ignore')),
+])  
+```
+```python
+from sklearn.compose import ColumnTransformer
+
+preprocessing = ColumnTransformer(transformers=[
+    ('numeric columns', num_pipe, nums),
+    ('categorical columns', cat_pipe, cats),
+    ('dummy columns', dummy_pipe, dummies)],
+    remainder='passthrough'
+)
+```
+```python
+from xgboost import XGBRegressor
+from sklearn.ensemble import RandomForestRegressor
+
+rf_pipeline = Pipeline(steps=[
+    ('preprocess', preprocessing),
+    ('rf', RandomForestRegressor(random_state=42))
+])
+
+xgbr_pipeline = Pipeline(steps=[
+    ('preprocess', preprocessing),
+    ('xgboost', XGBRegressor(objective='reg:squarederror', alpha=1, random_state=42))
+])
+```
+
+<br/>
+
+#### First Tune and Evaluations
+For context, I tried about every single model in Scikit learn and found Random Forest and XGBoost to be the top two performance by quite a fair amount. For this reason, I'll only discussing the results from those two models.
 
 
 ## CAPi and CAPi Equation
