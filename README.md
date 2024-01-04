@@ -185,6 +185,19 @@ XGBoost:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Though these results were pretty good, I wanted to think of more ways I could reduce the error, since predictions need to be near perfect to derive any value (because temperature is only a small factor of what affects your run). 
 
 ### Re-evaluation with newly adjusted dataset
+After I had exhausted different kinds of models and tried to tune different parameters, I needed to think of ways to reduce the error by manipulating the dataset. There had to be some noise I could eliminate. That's when I realized that often times a lap might be a recovery between sets. 
+
+Recovery laps are a huge cause for noise in the dataset for a few reasons. A big one is that your heartrate will still be up from your speed set (so the model will get confused why there is a large increase in moving time but the heartrate is staying the same). The same thing is true for the pace zone and heartrate. Pace zone can compensate for the speed drop, but heartrate will be way higher than expected for that zone as well, further confusing the model.
+
+Another way to limit noise is cutting off laps where time is extremely miniscule. Often times you don't run a perfect 6 miles for the day and it might end up being 6.01. That .01 actually is recorded as a lap and can cause noise in the dataset because the distance elapsed is a HUGE outlier (we'll see why this is a problem in the CAPi use case).
+
+**Visual Representation**
+
+You can see the recovery sets inbetween the darker bars. Those are what we want to remove for the reasons listed above. Furthermore, the narrow bar on the end is me running down the hill to my house because I overshot on distance just a tiny bit. It should get dropped too because of it's miniscule length / moving time. 
+
+![outliers](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/example%20of%20outliers.png)
+
+Once I removed all instances
 
 ## CAPi and CAPi Equation
 ## Use Case on Run
