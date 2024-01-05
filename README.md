@@ -191,7 +191,7 @@ After I had exhausted different kinds of models and tried to tune different para
 
 Recovery laps are a huge cause for noise in the dataset for a few reasons. A big one is that your heartrate will still be up from your speed set (so the model will get confused why there is a large increase in moving time but the heartrate is staying the same). The same thing is true for the pace zone and heartrate. Pace zone can compensate for the speed drop, but heartrate will be way higher than expected for that zone as well, which confuses the model further.
 
-Another way to limit noise is cutting off laps where time is extremely miniscule or distance. Often times you don't run a perfect 6 miles for the day and it might end up being 6.01. That .01 actually is recorded as a lap and can cause noise in the dataset because the distance elapsed is a HUGE outlier (we'll see why this is a problem in the CAPi use case).
+Another way to limit noise is cutting off laps where time is extremely miniscule or distance. Often times you don't run a perfect 6 miles for the day and it might end up being 6.01. That .01 actually is recorded as a lap and can cause noise in the dataset because the distance elapsed is a HUGE outlier.
 
 **Visual Representation**
 
@@ -261,7 +261,7 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
   </thead>
   <tbody>
     <tr>
-      <td>Lap 1</td>
+      <td>1</td>
       <td>411</td>
       <td>411.12</td>
       <td>411.12</td>
@@ -272,7 +272,7 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
       <td>06:51/mi</td>
     </tr>
     <tr>
-      <td>Lap 2</td>
+      <td>2</td>
       <td>412</td>
       <td>412.05</td>
       <td>412.05</td>
@@ -283,7 +283,7 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
       <td>06:52/mi</td>
     </tr>
     <tr>
-      <td>Lap 3</td>
+      <td>3</td>
       <td>34</td>
       <td>34.57</td>
       <td>34.24</td>
@@ -294,7 +294,7 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
       <td>04:30/mi</td>
     </tr>
     <tr>
-      <td>Lap 4</td>
+      <td>4</td>
       <td>60</td>
       <td>66.95</td>
       <td>66.92</td>
@@ -305,7 +305,7 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
       <td>16:31/mi</td>
     </tr>
     <tr>
-      <td>Lap 5</td>
+      <td>5</td>
       <td>32</td>
       <td>34.66</td>
       <td>33.76</td>
@@ -318,6 +318,18 @@ To ensure that it works, I used CAPi on my most recent run to see how the result
   </tbody>
 </table>
 
+After CAPi makes these calculations, it aggregates all the paces and provides an overall CAP and updates the description of your activity with that information. Looks like it worked pretty well on this run! 4 seconds quicker per mile overall. Also looking at my individual 200 splits, I probably was going a little too hard. My CAP was way higher than the range I was supposed to be in.
+
+![use case](https://raw.githubusercontent.com/jbblancojr/CAPi/main/images/use%20case.png)
+
+## Limitations
+In its current state, CAPi only works on my account due to it only being trained on data from me. This is nice because I can essentially serve as a fixed effect and the model will account for varation within myself. If we wanted to scale this to multiple users, we could use `athlete_id` as a categorical variable. This would allow the model to figure out how temperature effects other runners differently. This is also another reason why the RMSE and MAPE are really small. Since we have a really specific dataset catered to myself, CAPi can be really good at predicting new activities that I post. This wouldn't be the case if you tried to use it to predict on someone elses run.
+
+In terms of integrating CAPi as a feature on Strava, scale is an important factor to consider. Can we feasibly train a CAPi for every Strava user? Probably not. One reason is that it would be expensive. Another is that other runners might not have enough recorded activities to get accurate CAP predictions. It is also important to consider scope. CAPi only works on runs right now. We would want to make this available to all athletes on Strava, but this would requires different feature matricies as different sports have different performance metrics. Ultimately, the best way to utilize CAPi would be to integrate it into the Workout Analysis Feature that Strava has (if you've read this far, you probably are familiar with what I am talking about). It would work the exact same way as GAP, but you would have another column and filter for CAP and the CAP paces would be filled with the ones from our lap predictions.
+
+Another thing to consider is my research. The data I collected and ran an econometric model on is the first of its kind. There has been various studies trying to discover the causal relationship between endurance sports and weather, or heartrate and weather, but we don't have a firm truth yet. That is to say, while I think 50 is a pretty good guess, there is definitely room to go back and improve my research. On that note, CAPi is only operating off optimal temperature. I'd like to go back to my research and include quadratic terms for things such as dew point and other weather variables with high feature importance in the model. I could then include those in CAPi to produce even more accurate $\hat{O}$ values.
+
+## Next Steps
+Going forward, I'd like to scale CAPi to work for any runner interested. However, development at that level is a bit out of my wheelhouse. In order to allow other athletes to authorize CAPi we would need a domain and a more organized database. Also CAPi would need to subscribe to Strava webhooks so that it can know when to make predictions to athletes. Right now, I don't have the monetary or skillset requirements to make that happen, so the POC App script is what we're left with for now. 
 
 
-## Limitations and Next Steps
