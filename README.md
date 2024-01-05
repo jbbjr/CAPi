@@ -219,7 +219,7 @@ Now that we have the model we can use it in our app. `CAPi.py` is a POC for the 
 - Get the DetailedActivity and transform the Laps object
 - Load CAPi.pkl and make necesarry predictions
 - Calculate CAP
-- Update Activity
+- Update Activity Description with an overall CAP  
 - Send results to BigQuery (For now, results are temporarily stored here so I can test other features)
 
 ### Calculating Climate Adjusted Pace (CAP)
@@ -240,6 +240,9 @@ When we put it all together, CAP looks something like this.
 $A = T - (\hat{M} - \hat{O})$
 
 Where $A$ is Adjusted Pace, and $T$ is the True Pace recorded from our activity. The idea is that instead of just subtracting True and Optimal and getting some weird results due to model error, we can confine the error to the difference between our predictions and say that the margin represents the true relationship of $T$ - $O$ with a 2 second error on average.
+
+## Use Case on Run
+To ensure that it works, I used CAPi on my most recent run to see how the results shape out. It was a quality session with lots of 200 repeats. Here is a sample output from the first few laps.
 
 **Example Output**
 <table>
@@ -300,7 +303,7 @@ Where $A$ is Adjusted Pace, and $T$ is the True Pace recorded from our activity.
       <td>18:27/mi</td>
       <td>18:26/mi</td>
       <td>16:31/mi</td>
-    <\tr>
+    </tr>
     <tr>
       <td>Lap 5</td>
       <td>32</td>
@@ -316,5 +319,5 @@ Where $A$ is Adjusted Pace, and $T$ is the True Pace recorded from our activity.
 </table>
 
 
-## Use Case on Run
+
 ## Limitations and Next Steps
