@@ -209,8 +209,20 @@ Once I removed all instances the dataset was around 3200 observations, which is 
 
 <br/>
 
-The hypothesis on the recovery and the spillover laps seems to hold true, as the error decreased by a reasonable amount. I did try to utilize Random Forest for feature seleciton, and the error didn't really change that much (slight increase). I felt that keeping the variables made the most sense because the compute is basically the same. I ended up going with the XGBoost and storing it in `CAPi.pkl` so that we can call on it for predictions in the app script.
+The hypothesis on the recovery and the spillover laps seems to hold true, as the error decreased by a reasonable amount. I did try to utilize Random Forest for feature seleciton, and the error didn't really change that much (slight increase). Keeping the variables made the most sense because the compute is basically the same. I ended up going with the XGBoost and storing it in `CAPi.pkl` so that we can call on it for predictions in the app script.
 
 ## CAPi and CAPi Equation
+Now that we have the model we can use it in our app. `CAPi.py` is a POC for the app. It does all the necessary API calls, transformations, calculations and finally updates your activity with an overall CAP. The prediction results are temporarily being sent to BigQuery for safe keeping. Before explaining 
+
+**CAPi in Summary**
+- Grab the most recent activity and check edge cases
+- Get the DetailedActivity and transform the Laps object
+- load CAPi.pkl and predict 
+
+### Calculating Climate Adjusted Pace (CAP)
+
+
+**Example Output**
+
 ## Use Case on Run
 ## Limitations and Next Steps
