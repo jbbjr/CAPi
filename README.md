@@ -233,7 +233,7 @@ $\hat{O}$:&nbsp;&nbsp;&nbsp;Predicted Optimal Pace
 
 <br/>
 
-Where $\hat{M}$ is us trying to predict moving time like how we were in model evaluation and $\hat{O}$ is the same prediction but imputing 50 for temp in all observations (This is what I found as the optimal temp in my research).
+Where $\hat{M}$ is us trying to predict moving time (like how we were in model evaluation), and $\hat{O}$ is the same prediction but imputing 50 for temp in all observations (This is what I found as the optimal temp in my research).
 
 When we put it all together, CAP looks something like this.
 
@@ -242,6 +242,79 @@ $A = T - (\hat{M} - \hat{O})$
 Where $A$ is Adjusted Pace, and $T$ is the True Pace recorded from our activity. The idea is that instead of just subtracting True and Optimal and getting some weird results due to model error, we can confine the error to the difference between our predictions and say that the margin represents the true relationship of $T$ - $O$ with a 2 second error on average.
 
 **Example Output**
+<table>
+  <thead>
+    <tr>
+      <th>Lap</th>
+      <th>Moving Time</th>
+      <th>Predictions</th>
+      <th>Optimal</th>
+      <th>CAPi Elapsed Time</th>
+      <th>Pace Formatted</th>
+      <th>Predicted Pace Formatted</th>
+      <th>Optimal Predicted Pace</th>
+      <th>CAPi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lap 1</td>
+      <td>411</td>
+      <td>411.12</td>
+      <td>411.12</td>
+      <td>411.00</td>
+      <td>06:51/mi</td>
+      <td>06:51/mi</td>
+      <td>06:51/mi</td>
+      <td>06:51/mi</td>
+    </tr>
+    <tr>
+      <td>Lap 2</td>
+      <td>412</td>
+      <td>412.05</td>
+      <td>412.05</td>
+      <td>412.00</td>
+      <td>06:52/mi</td>
+      <td>06:52/mi</td>
+      <td>06:52/mi</td>
+      <td>06:52/mi</td>
+    </tr>
+    <tr>
+      <td>Lap 3</td>
+      <td>34</td>
+      <td>34.57</td>
+      <td>34.24</td>
+      <td>33.66</td>
+      <td>04:33/mi</td>
+      <td>04:38/mi</td>
+      <td>04:35/mi</td>
+      <td>04:30/mi</td>
+    </tr>
+    <tr>
+      <td>Lap 4</td>
+      <td>60</td>
+      <td>66.95</td>
+      <td>66.92</td>
+      <td>59.97</td>
+      <td>16:32/mi</td>
+      <td>18:27/mi</td>
+      <td>18:26/mi</td>
+      <td>16:31/mi</td>
+    <\tr>
+    <tr>
+      <td>Lap 5</td>
+      <td>32</td>
+      <td>34.66</td>
+      <td>33.76</td>
+      <td>31.10</td>
+      <td>04:17/mi</td>
+      <td>04:38/mi</td>
+      <td>04:31/mi</td>
+      <td>04:10/mi</td>
+    </tr>
+  </tbody>
+</table>
+
 
 ## Use Case on Run
 ## Limitations and Next Steps
