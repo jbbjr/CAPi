@@ -1,5 +1,8 @@
-from StravaAPI import Client
+import datetime
+
+import numpy as np
 import pandas as pd
+from StravaAPI import Client
 import pickle
 from dotenv import load_dotenv
 import os
@@ -96,7 +99,7 @@ X_test = activity.drop(columns=['moving_time'])
 predictions = CAPi.predict(X_test)
 
 # Optimal conditions
-X['temp'] = 50
+X.loc[:, 'temp'] = 50
 X_test = X
 temp_predictions = CAPi.predict(X_test)
 
@@ -112,7 +115,7 @@ activity['optimal_predicted_pace'] = activity.apply(pace_conversion, col='optima
 activity['CAPi'] = activity.apply(pace_conversion, col='CAPi_elapsed_time', axis=1)
 
 # Update the activity with the overall adjusted pace on the users Strava
-client.update_description(activity_id=id, desc=desc, pace=overall_pace(activity, 'CAPi_elapsed_time'))
+# client.update_description(activity_id=id, desc=desc, pace=overall_pace(activity, 'CAPi_elapsed_time'))
 
 print('CAPi Laps')
 print(activity['CAPi'])
@@ -120,12 +123,86 @@ print()
 print('Normal Laps')
 print(activity['pace_formatted'])
 
-# send results to bigquery database
-bq_client = bigquery.Client(project='capi-410116')
-job_config = bigquery.LoadJobConfig(autodetect=True)
-ref = 'capi-410116-activities.activities-with-weather'
-
+# Transformations for BQ
+activity = activity.replace(np.NAN, None)
+activity['athlete_id'] = activity['athlete.id']
 new_data = activity.to_dict(orient='records')
 
-# Insert the new data into the table
-bq_client.insert_rows(ref, new_data)
+# send results to bigquery database
+bq_client = bigquery.Client(project='capi-410116')
+ref = 'capi-410116.activities.activities-with-weather'
+
+# established schema
+schema = [
+    bigquery.SchemaField('id', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('moving_time', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('start_date_local', 'TIMESTAMP', mode='NULLABLE'),
+    bigquery.SchemaField('distance', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('average_speed', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('max_speed', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('lap_index', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('total_elevation_gain', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('average_cadence', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('average_watts', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('average_heartrate', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('max_heartrate', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('pace_zone', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('activity_id', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('athlete_id', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('type', 'STRING', mode='NULLABLE'),
+    bigquery.SchemaField('start_lat', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('start_long', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('temp', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('dew', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('humidity', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('distance_covered_prior', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('winddir', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('conditions', 'STRING', mode='NULLABLE'),
+    bigquery.SchemaField('windspeed', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('cloudcover', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('time_elapsed_prior', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('time_elapsed_prior', 'INTEGER', mode='NULLABLE'),
+    bigquery.SchemaField('predictions', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('optimal', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('CAPi_elapsed_time', 'FLOAT', mode='NULLABLE'),
+    bigquery.SchemaField('pace_formatted', 'STRING', mode='NULLABLE'),
+    bigquery.SchemaField('predicted_pace_formatted', 'STRING', mode='NULLABLE'),
+    bigquery.SchemaField('optimal_predicted_pace', 'STRING', mode='NULLABLE'),
+    bigquery.SchemaField('CAPi', 'STRING', mode='NULLABLE'),
+]
+
+# copy the df for schema type mapping
+activity_mapped = activity.copy()
+activity_mapped = activity_mapped[['id', 'moving_time', 'start_date_local', 'distance', 'average_speed', 'max_speed', 'lap_index',
+                             'total_elevation_gain', 'average_cadence', 'average_watts', 'average_heartrate', 'max_heartrate',
+                             'pace_zone', 'activity_id', 'athlete_id', 'type', 'start_lat', 'start_long', 'temp', 'dew',
+                             'humidity', 'precip', 'windspeed', 'winddir', 'sealevelpressure', 'cloudcover', 'conditions',
+                             'distance_covered_prior', 'time_elapsed_prior', 'predictions', 'optimal', 'CAPi_elapsed_time',
+                             'pace_formatted', 'predicted_pace_formatted', 'optimal_predicted_pace', 'CAPi']]
+
+
+dtype_map = {'INTEGER': int, 'STRING': str, 'FLOAT': float, 'TIMESTAMP': 'datetime64[ns]'}
+
+for field in schema:
+    column_name = field.name
+    data_type = dtype_map.get(field.field_type)
+
+    # Handle nullable columns
+    if field.mode == 'NULLABLE':
+        activity_mapped[column_name] = activity_mapped[column_name].astype(data_type, errors='ignore')
+    else:
+        activity_mapped[column_name] = activity_mapped[column_name].astype(data_type)
+
+# TIMESTAMP finicky sometimes
+activity_mapped['start_date_local'] = pd.to_datetime(activity_mapped['start_date_local'], errors='coerce')
+activity_mapped.info()
+
+# Do the BQ stuff
+job_config = bigquery.LoadJobConfig(autodetect=False, write_disposition='WRITE_APPEND', schema=schema)
+job = bq_client.load_table_from_dataframe(activity_mapped, ref, job_config=job_config)
+job.result()
+
+if job.errors:
+    print(f"Errors during batch insert: {job.errors}")
+else:
+    print("Batch insert successful")
