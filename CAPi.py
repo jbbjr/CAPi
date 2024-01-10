@@ -115,7 +115,7 @@ activity['optimal_predicted_pace'] = activity.apply(pace_conversion, col='optima
 activity['CAPi'] = activity.apply(pace_conversion, col='CAPi_elapsed_time', axis=1)
 
 # Update the activity with the overall adjusted pace on the users Strava
-# client.update_description(activity_id=id, desc=desc, pace=overall_pace(activity, 'CAPi_elapsed_time'))
+client.update_description(activity_id=id, desc=desc, pace=overall_pace(activity, 'CAPi_elapsed_time'))
 
 print('CAPi Laps')
 print(activity['CAPi'])
