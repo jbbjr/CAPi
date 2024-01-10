@@ -209,7 +209,7 @@ Once I removed all instances the dataset was around 3200 observations, which is 
 
 <br/>
 
-The hypothesis on the recovery and the spillover laps seems to hold true, as the error decreased by a reasonable amount. I did try to utilize Random Forest for feature seleciton, and the error didn't really change that much (slight increase). Keeping the variables made the most sense because the compute is basically the same. I ended up going with the XGBoost and storing it in `CAPi.pkl` so that we can call on it for predictions in the app script.
+The hypothesis on the recovery and the spillover laps seems to hold true, as the error decreased by a reasonable amount. I did try to utilize Random Forest for feature seleciton, and the error didn't really change that much (slight increase). Keeping the variables made the most sense because the compute is basically the same. I ended up going with the XGBoost and storing it in `CAPi.pkl` so that we can call on it for predictions in the App.
 
 ## CAPi and CAPi Equation
 Now that we have the model we can use it in our app. `CAPi.py` is a POC for the app. It does all the necessary API calls, transformations, CAP calculations and finally updates your activity with an overall CAP.
@@ -330,6 +330,6 @@ In terms of integrating CAPi as a feature on Strava, scale is an important facto
 Another thing to consider is my research. The data I collected and ran an econometric model on is the first of its kind. There has been various studies trying to discover the causal relationship between endurance sports and weather, or heartrate and weather, but we don't have a firm truth yet. That is to say, while I think 50 is a pretty good guess, there is definitely room to go back and improve my research. On that note, CAPi is only operating off optimal temperature. I'd like to go back to my research and include quadratic terms for things such as dew point and other weather variables with high feature importance in the model. I could then include those in CAPi to produce even more accurate $\hat{O}$ values.
 
 ## Next Steps
-Going forward, I'd like to scale CAPi to work for any runner interested. However, development at that level is a bit out of my wheelhouse. In order to allow other athletes to authorize CAPi we would need a domain and a more organized database. Also CAPi would need to subscribe to Strava webhooks so that it can know when to make predictions to athletes. Right now, I don't have the monetary or skillset requirements to make that happen, so the POC App script is what we're left with for now. 
+Going forward, I'd like to scale CAPi to work for any runner interested. However, development at that level is a bit out of my wheelhouse. In order to allow other athletes to authorize CAPi we would need a domain and a more organized database. Also CAPi would need to subscribe to Strava webhooks so that it can know when to make predictions to athletes. Right now, I don't have the monetary or skillset requirements to make that happen, so the POC App is what we're left with for now. 
 
 
