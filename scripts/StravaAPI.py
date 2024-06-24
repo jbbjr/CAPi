@@ -150,7 +150,6 @@ class Client:
         url = f'{self.base_url}athlete/activities'
         header = {'Authorization': 'Bearer ' + self.access_token}
         param = {'per_page': 1, 'page': 1}
-
         result = requests.get(url, headers=header, params=param).json()
 
         print(url)

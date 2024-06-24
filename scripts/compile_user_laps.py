@@ -1,4 +1,4 @@
-from StravaAPI import Client
+from scripts.StravaAPI import Client
 import os
 from dotenv import load_dotenv
 import pandas as pd

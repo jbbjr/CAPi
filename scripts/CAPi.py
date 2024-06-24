@@ -2,7 +2,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-from StravaAPI import Client
+from scripts.StravaAPI import Client
 import pickle
 from dotenv import load_dotenv
 import os
@@ -176,7 +176,7 @@ activity_mapped = activity.copy()
 activity_mapped = activity_mapped[['id', 'moving_time', 'start_date_local', 'distance', 'average_speed', 'max_speed', 'lap_index',
                              'total_elevation_gain', 'average_cadence', 'average_watts', 'average_heartrate', 'max_heartrate',
                              'pace_zone', 'activity_id', 'athlete_id', 'type', 'start_lat', 'start_long', 'temp', 'dew',
-                             'humidity', 'precip', 'windspeed', 'winddir', 'sealevelpressure', 'cloudcover', 'conditions',
+                             'humidity', 'windspeed', 'winddir', 'sealevelpressure', 'cloudcover', 'conditions',
                              'distance_covered_prior', 'time_elapsed_prior', 'predictions', 'optimal', 'CAPi_elapsed_time',
                              'pace_formatted', 'predicted_pace_formatted', 'optimal_predicted_pace', 'CAPi']]
 
