@@ -3,6 +3,7 @@ import pandas as pd
 import urllib3
 import ssl
 
+
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -73,7 +74,7 @@ class Client:
 
     # edits the current description to include the CAPi predictions
     def update_description(self, activity_id=int, desc=str, pace=str):
-        url = f'{self.base_url}/activities/{activity_id}'
+        url = f'{self.base_url}activities/{activity_id}'
         header = {'Authorization': 'Bearer ' + self.access_token}
         param = {'id': activity_id, '<Parameter Name>': 'description'}
 
